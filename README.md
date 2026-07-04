@@ -15,7 +15,7 @@ Reusable instruction files for [opencode](https://opencode.ai) projects done by 
 Add this repo as a git submodule to your project:
 
 ```sh
-git submodule add https://github.com/ftzi/shared-instructions.git .opencode/shared-instructions
+git submodule add https://github.com/ftzi/shared-instructions.git .agents/shared-instructions
 ```
 
 Then reference the files in your project's `opencode.json`:
@@ -24,9 +24,9 @@ Then reference the files in your project's `opencode.json`:
 {
   "$schema": "https://opencode.ai/config.json",
   "instructions": [
-    ".opencode/shared-instructions/GENERAL.md",
-    ".opencode/shared-instructions/TYPESCRIPT.md",
-    ".opencode/shared-instructions/REACT.md"
+    ".agents/shared-instructions/GENERAL.md",
+    ".agents/shared-instructions/TYPESCRIPT.md",
+    ".agents/shared-instructions/REACT.md"
   ],
   "mcp": {
     "context7": {
