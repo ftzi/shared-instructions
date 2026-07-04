@@ -100,6 +100,12 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 - Prefer simple conditionals over nested ternary operators
 - Group related code together and separate concerns
 
+### Single Source of Truth
+
+- **NEVER define the same value in two places.** Magic numbers, URLs, model names, config keys, timeout durations — anything that could drift — MUST be defined exactly once and imported everywhere else. Duplicate definitions WILL diverge and cause bugs that are hard to find.
+- Extract shared constants to the package closest to where they're used. If multiple packages need the same value, move it to the lowest common dependency or a shared config module.
+- If two files need the same string literal, it's already wrong. Export it.
+
 ### Security
 
 - Validate and sanitize user input
