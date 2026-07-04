@@ -1,6 +1,6 @@
 # Shared AI Instructions
 
-Reusable instruction files for [opencode](https://opencode.ai) projects. These files define the AI agent's behavior across different coding domains.
+Reusable instruction files for [opencode](https://opencode.ai) projects done by ftzi. These files define the AI agent's behavior across different coding domains.
 
 ## Files
 
@@ -46,9 +46,3 @@ Then reference the files in your project's `opencode.json`:
 ### Caveman
 
 `GENERAL.md` includes the rule `Use caveman.`. To install it, follow https://github.com/juliusbrussee/caveman#install. Else, remove that line.
-
-### Updating
-
-```sh
-git submodule update --remote .opencode/shared-instructions
-```
