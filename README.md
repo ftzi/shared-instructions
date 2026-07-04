@@ -45,7 +45,7 @@ Then reference the files in your project's `opencode.json`:
 
 ### Caveman
 
-`GENERAL.md` includes the rule `Use caveman.` — a style directive that makes the AI communicate concisely. If your project does not want this behavior, remove or comment out that line.
+`GENERAL.md` includes the rule `Use caveman.`. To install it, follow https://github.com/juliusbrussee/caveman#install. Else, remove that line.
 
 ### Updating
 
