@@ -1,6 +1,10 @@
 # Shared AI Instructions
 
-Reusable instruction files for [opencode](https://opencode.ai) projects done by ftzi. These files define the AI agent's behavior across different coding domains.
+Personal reusable instructions for projects that use [opencode](https://opencode.ai).
+
+Intended to be a submodule so it can effortlessly be updated among projects.
+
+For React and Typescript, they could be skills but for now it's a whatever. They aren't big files and I prefer to always have them loaded than being unlucky and the skill not being loaded when it should.
 
 ## Files
 
@@ -18,7 +22,7 @@ Add this repo as a git submodule to your project:
 git submodule add https://github.com/ftzi/shared-instructions.git .agents/shared-instructions
 ```
 
-Then reference the files in your project's `opencode.json`:
+Then reference the instruction files you want in your project's `opencode.json` (they will work like they were inside AGENTS.md):
 
 ```json
 {
