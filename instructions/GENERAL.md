@@ -24,7 +24,7 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 
 ## Git
 
-- **Commit / push gate — CRITICAL, NEVER VIOLATE:** NEVER commit, stage, push, or run `git add` under ANY circumstance unless the user types an explicit command containing the word "commit." Finishing a task is NOT permission to commit. A prior commit in the conversation does NOT carry forward. Every commit requires a fresh, explicit user request containing the word "commit." NEVER run any git operation that touches the index or remote without the user's explicit commit command. If unsure, ASK first — never assume.
+- **Commit / push gate — CRITICAL, NEVER VIOLATE:** NEVER commit, stage, push, or run `git add` under ANY circumstance unless the user types an explicit command containing the word "commit." Finishing a task is NOT permission to commit. A prior commit in the conversation does NOT carry forward. Every commit requires a fresh, explicit user request containing the word "commit." NEVER chain `git commit` or `git push` with other commands — commits must be isolated, standalone invocations triggered only by the user's explicit commit request. NEVER run any git operation that touches the index or remote without the user's explicit commit command. If unsure, ASK first — never assume.
 - When user does request a commit, use `git add -A && git commit -m "<message>" && git push origin <branch>` in a single shell invocation.
 - **NEVER add AI attribution to commit messages** (no `Co-Authored-By`).
 - **NEVER use `--no-verify`** unless user strictly says `"skip hooks"` or `"no-verify"`. If a hook fails, fix the issue — don't bypass it.
