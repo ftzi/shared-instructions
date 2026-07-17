@@ -1,7 +1,0 @@
-{
-  "name": "shared",
-  "private": true,
-  "dependencies": {
-    "@clack/prompts": "^0.11.0"
-  }
-}

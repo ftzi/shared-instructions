@@ -53,6 +53,6 @@ Then run:
 bun setup:secrets
 ```
 
-Shows a selectable table of all env vars with local (`.env.local`) and GitHub (`gh secret list`) status. Select a key to set its value for local or GitHub.
+Shows a selectable table of all env vars with local (`.env`) and GitHub (`gh secret list`) status. Select a key to set its value for local or GitHub.
 
-Requires: `@clack/prompts`, `gh` CLI (for GitHub secrets).
+Uses Bun [auto-install](https://bun.sh/docs/runtime/auto-install#version-specifiers) — no `package.json` or `node_modules` required. Dependencies are resolved from import specifiers.
