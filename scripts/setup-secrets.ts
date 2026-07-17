@@ -165,9 +165,10 @@ async function main() {
         {
           value: "local",
           label: "Local (.env.local)",
-          hint: typeof currentLocal === "string"
-            ? `current: ${currentLocal.slice(0, 20)}...`
-            : "not set",
+          hint:
+            typeof currentLocal === "string"
+              ? `current: ${currentLocal.slice(0, 20)}...`
+              : "not set",
         },
         {
           value: "github",
