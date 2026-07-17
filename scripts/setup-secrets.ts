@@ -2,7 +2,15 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-import { intro, isCancel, log, outro, select, spinner, text } from "@clack/prompts";
+import {
+  intro,
+  isCancel,
+  log,
+  outro,
+  select,
+  spinner,
+  text,
+} from "@clack/prompts";
 
 const REPO_ROOT = process.cwd();
 
@@ -12,6 +20,7 @@ type Entry = {
   defaultValue: string;
   localSet: boolean;
   githubSet: boolean;
+  githubUpdatedAt: string;
 };
 
 function parseEnvExample(): Entry[] {
@@ -43,6 +52,7 @@ function parseEnvExample(): Entry[] {
       defaultValue,
       localSet: false,
       githubSet: false,
+      githubUpdatedAt: "",
     });
     pendingDescription = "";
   }
@@ -65,21 +75,21 @@ function readLocalEnv(): Map<string, string> {
   return map;
 }
 
-function readGitHubSecrets(): Set<string> {
-  const set = new Set<string>();
+function readGitHubSecrets(): Map<string, string> {
+  const map = new Map<string, string>();
   try {
-    const raw = execSync("gh secret list --json name", {
+    const raw = execSync("gh secret list --json name,updatedAt", {
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
     });
-    const parsed = JSON.parse(raw) as { name: string }[];
-    for (const { name } of parsed) {
-      set.add(name);
+    const parsed = JSON.parse(raw) as { name: string; updatedAt: string }[];
+    for (const { name, updatedAt } of parsed) {
+      map.set(name, updatedAt);
     }
   } catch {
     // gh CLI not authenticated or no secrets — show all as unset
   }
-  return set;
+  return map;
 }
 
 function formatValue(value: string | undefined, defaultValue: string): string {
@@ -109,12 +119,13 @@ async function main() {
     entry.localSet =
       localEnv.has(entry.key) && (localEnv.get(entry.key) ?? "").length > 0;
     entry.githubSet = githubSecrets.has(entry.key);
+    entry.githubUpdatedAt = githubSecrets.get(entry.key) ?? "";
   }
 
   for (;;) {
     const choices = entries.map((e) => {
       const local = e.localSet ? "✓" : "—";
-      const github = e.githubSet ? "✓" : "—";
+      const github = e.githubSet ? `✓ ${e.githubUpdatedAt.slice(0, 10)}` : "—";
       const desc = e.description ? ` — ${e.description}` : "";
       return {
         value: e.key,
@@ -155,7 +166,9 @@ async function main() {
         {
           value: "github",
           label: "GitHub Actions secret",
-          hint: entry.githubSet ? "already set" : "not set",
+          hint: entry.githubSet
+            ? `last updated: ${entry.githubUpdatedAt.slice(0, 10)}`
+            : "not set",
         },
         { value: "back", label: "Back" },
       ],
@@ -193,6 +206,7 @@ async function main() {
         stdio: ["pipe", "pipe", "pipe"],
       });
       entry.githubSet = true;
+      entry.githubUpdatedAt = new Date().toISOString();
       s.stop("Set as GitHub secret");
     }
   }
