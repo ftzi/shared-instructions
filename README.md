@@ -26,8 +26,8 @@ Then reference from your project's entry point:
   "instructions": [
     "shared/instructions/GENERAL.md",
     "shared/instructions/TYPESCRIPT.md",
-    "shared/instructions/REACT.md"
-  ]
+    "shared/instructions/REACT.md",
+  ],
 }
 ```
 

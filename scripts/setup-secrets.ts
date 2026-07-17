@@ -1,13 +1,22 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import { execSync } from "node:child_process";
-import { confirm, intro, isCancel, log, note, outro, select, spinner, text } from "@clack/prompts";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+import {
+  intro,
+  isCancel,
+  log,
+  outro,
+  select,
+  spinner,
+  text,
+} from "@clack/prompts";
 
 const REPO_ROOT = (() => {
   const dirs = process.cwd().split("/");
   for (let i = dirs.length; i > 0; i--) {
     const candidate = dirs.slice(0, i).join("/");
-    if (existsSync(join(candidate, ".git"))) return candidate;
+    if (existsSync(path.join(candidate, ".git"))) return candidate;
   }
   return process.cwd();
 })();
@@ -22,13 +31,13 @@ type Entry = {
 };
 
 function parseEnvExample(): Entry[] {
-  const path = join(REPO_ROOT, ".env.example");
-  if (!existsSync(path)) {
+  const envPath = path.join(REPO_ROOT, ".env.example");
+  if (!existsSync(envPath)) {
     log.error(".env.example not found in repository root");
     process.exit(1);
   }
 
-  const content = readFileSync(path, "utf-8");
+  const content = readFileSync(envPath, "utf-8");
   const lines = content.split("\n");
   const entries: Entry[] = [];
   let pendingDescription = "";
@@ -44,7 +53,14 @@ function parseEnvExample(): Entry[] {
     if (eqIndex === -1) continue;
     const key = line.slice(0, eqIndex).trim();
     const defaultValue = line.slice(eqIndex + 1).trim();
-    entries.push({ key, description: pendingDescription, defaultValue, localSet: false, githubSet: false, githubUpdatedAt: "" });
+    entries.push({
+      key,
+      description: pendingDescription,
+      defaultValue,
+      localSet: false,
+      githubSet: false,
+      githubUpdatedAt: "",
+    });
     pendingDescription = "";
   }
 
@@ -53,9 +69,9 @@ function parseEnvExample(): Entry[] {
 
 function readLocalEnv(): Map<string, string> {
   const map = new Map<string, string>();
-  const path = join(REPO_ROOT, ".env.local");
-  if (!existsSync(path)) return map;
-  const content = readFileSync(path, "utf-8");
+  const envPath = path.join(REPO_ROOT, ".env.local");
+  if (!existsSync(envPath)) return map;
+  const content = readFileSync(envPath, "utf-8");
   for (const line of content.split("\n")) {
     const trimmed = line.trim();
     if (trimmed === "" || trimmed.startsWith("#")) continue;
@@ -96,7 +112,7 @@ function writeLocalEnv(entries: Entry[], localEnv: Map<string, string>) {
     lines.push(`${key}=${localEnv.get(key) ?? defaultValue}`);
     lines.push("");
   }
-  writeFileSync(join(REPO_ROOT, ".env.local"), lines.join("\n"));
+  writeFileSync(path.join(REPO_ROOT, ".env.local"), lines.join("\n"));
 }
 
 async function main() {
@@ -107,7 +123,8 @@ async function main() {
   const githubSecrets = readGitHubSecrets();
 
   for (const entry of entries) {
-    entry.localSet = localEnv.has(entry.key) && (localEnv.get(entry.key) ?? "").length > 0;
+    entry.localSet =
+      localEnv.has(entry.key) && (localEnv.get(entry.key) ?? "").length > 0;
     entry.githubSet = githubSecrets.has(entry.key);
     entry.githubUpdatedAt = githubSecrets.get(entry.key) ?? "";
   }
@@ -119,7 +136,7 @@ async function main() {
       const desc = e.description ? ` — ${e.description}` : "";
       return {
         value: e.key,
-        label: `${e.key}`,
+        label: e.key,
         hint: `local: ${local}  github: ${github}${desc}`,
       };
     });
@@ -133,7 +150,9 @@ async function main() {
 
     if (isCancel(key) || key === "__done__") break;
 
-    const entry = entries.find((e) => e.key === key)!;
+    const entry = entries.find((e) => e.key === key);
+    if (!entry) continue;
+
     const currentLocal = localEnv.get(entry.key);
     const defaultValue = formatValue(currentLocal, entry.defaultValue);
 
@@ -143,8 +162,20 @@ async function main() {
     const kind = await select({
       message: `Set ${entry.key} ${entry.description ? `(${entry.description})` : ""} for:`,
       options: [
-        { value: "local", label: "Local (.env.local)", hint: currentLocal ? `current: ${currentLocal.slice(0, 20)}...` : "not set" },
-        { value: "github", label: "GitHub Actions secret", hint: entry.githubSet ? `last updated: ${entry.githubUpdatedAt.slice(0, 10)}` : "not set" },
+        {
+          value: "local",
+          label: "Local (.env.local)",
+          hint: currentLocal
+            ? `current: ${currentLocal.slice(0, 20)}...`
+            : "not set",
+        },
+        {
+          value: "github",
+          label: "GitHub Actions secret",
+          hint: entry.githubSet
+            ? `last updated: ${entry.githubUpdatedAt.slice(0, 10)}`
+            : "not set",
+        },
         { value: "back", label: "Back" },
       ],
     });
@@ -154,11 +185,15 @@ async function main() {
       continue;
     }
 
+    const hint = defaultValue.length > 0 ? defaultValue : undefined;
     const value = await text({
       message: `Value for ${entry.key}:`,
-      placeholder: defaultValue,
+      placeholder: hint,
       validate: (v) => {
-        if (v.length === 0 && entry.defaultValue.length === 0) return "Required";
+        if (v.length === 0 && entry.defaultValue.length === 0) {
+          return "Required";
+        }
+        return undefined;
       },
     });
 
@@ -186,7 +221,7 @@ async function main() {
   outro("Done.");
 }
 
-main().catch((err: unknown) => {
-  log.error(`Unexpected error: ${String(err)}`);
+main().catch((error: unknown) => {
+  log.error(`Unexpected error: ${String(error)}`);
   process.exit(1);
 });
