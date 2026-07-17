@@ -194,7 +194,6 @@ async function main() {
         if (v.length === 0 && entry.defaultValue.length === 0) {
           return "Required";
         }
-        return undefined;
       },
     });
 
