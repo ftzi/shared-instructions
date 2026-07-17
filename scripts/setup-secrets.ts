@@ -69,7 +69,7 @@ function parseEnvExample(): Entry[] {
 
 function readLocalEnv(): Map<string, string> {
   const map = new Map<string, string>();
-  const envPath = path.join(REPO_ROOT, ".env.local");
+  const envPath = path.join(REPO_ROOT, ".env");
   if (!existsSync(envPath)) return map;
   const content = readFileSync(envPath, "utf-8");
   for (const line of content.split("\n")) {
@@ -112,7 +112,7 @@ function writeLocalEnv(entries: Entry[], localEnv: Map<string, string>) {
     lines.push(`${key}=${localEnv.get(key) ?? defaultValue}`);
     lines.push("");
   }
-  writeFileSync(path.join(REPO_ROOT, ".env.local"), lines.join("\n"));
+  writeFileSync(path.join(REPO_ROOT, ".env"), lines.join("\n"));
 }
 
 async function main() {
