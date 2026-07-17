@@ -2,24 +2,9 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-import {
-  intro,
-  isCancel,
-  log,
-  outro,
-  select,
-  spinner,
-  text,
-} from "@clack/prompts";
+import { intro, isCancel, log, outro, select, spinner, text } from "@clack/prompts";
 
-const REPO_ROOT = (() => {
-  const dirs = process.cwd().split("/");
-  for (let i = dirs.length; i > 0; i--) {
-    const candidate = dirs.slice(0, i).join("/");
-    if (existsSync(path.join(candidate, ".git"))) return candidate;
-  }
-  return process.cwd();
-})();
+const REPO_ROOT = process.cwd();
 
 type Entry = {
   key: string;
