@@ -10,7 +10,7 @@ import {
   select,
   spinner,
   text,
-} from "@clack/prompts@1.7.0";
+} from "@clack/prompts";
 
 const REPO_ROOT = (() => {
   const dirs = process.cwd().split("/");
