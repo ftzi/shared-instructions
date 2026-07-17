@@ -165,7 +165,7 @@ async function main() {
         {
           value: "local",
           label: "Local (.env.local)",
-          hint: currentLocal
+          hint: typeof currentLocal === "string"
             ? `current: ${currentLocal.slice(0, 20)}...`
             : "not set",
         },
