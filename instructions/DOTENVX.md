@@ -10,11 +10,11 @@ npm install --save-dev @dotenvx/dotenvx
 
 ## Files
 
-| File | Purpose | Committed? |
-|---|---|---|
-| `.env.development` | Development secrets | Yes (encrypted) |
-| `.env.production` | Production secrets | Yes (encrypted) |
-| `.env.keys` | Private decryption keys | **Never** |
+| File               | Purpose                 | Committed?      |
+| ------------------ | ----------------------- | --------------- |
+| `.env.development` | Development secrets     | Yes (encrypted) |
+| `.env.production`  | Production secrets      | Yes (encrypted) |
+| `.env.keys`        | Private decryption keys | **Never**       |
 
 ## Encrypt
 
