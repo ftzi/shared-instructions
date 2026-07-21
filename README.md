@@ -7,7 +7,9 @@ Reusable AI instructions, skills, and scripts across projects. Keep this repo ge
 ```
 instructions/     Generic AI rules (GENERAL.md, TYPESCRIPT.md, REACT.md)
 scripts/          Reusable CLI tools
+DOTENVX.md        Secrets management standard (dotenvx)
 ```
+
 ## Usage
 
 ### Add to a project
@@ -28,4 +30,3 @@ Then reference from your project's entry point:
   ],
 }
 ```
-
