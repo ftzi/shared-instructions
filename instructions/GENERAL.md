@@ -38,6 +38,11 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 - First push: `git push -u origin <branch-name>`.
 - GitHub ops: use `gh` CLI.
 
+## Found Issues
+
+- **NEVER leave a found error unaddressed.** When you discover a bug, stale config, dead code, redundant file, broken reference, or any issue during a task — even one unrelated to the original request — you MUST either (a) fix it immediately if the fix is simple and low-risk, or (b) surface it clearly to the user with a proposed fix. NEVER silently move on with "that's out of scope" or bury it in a status update.
+- A discovered issue is a deliverable of the task, not a footnote.
+
 ## Persistent Fixes
 
 - **Persistent fixes, never session-only workarounds:** When the user reports a problem or asks for a behavioral change, **YOU MUST** fix the root cause in the repo (code, scripts, tool wiring, docs, skills, or shared setup) so the fix persists for every future session. NEVER solve it only for the current turn by adapting your ad-hoc behavior without updating the underlying tool or doc. If a doc, command, or skill that you relied on is wrong or missing, fix that source in the same task. Session-only behavior changes are a bug.
@@ -69,6 +74,7 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 - If the user asks to merge or resolve conflicts into any branch, the task MUST also push the resulting branch after conflicts are resolved and validation passes.
 - If any file instruction points at a wrong, stale, or missing command, MUST fix the instruction source in the same task instead of working around it or leaving the bad instruction in place.
 - When changing scripts in `package.json` or tools, MUST search all docs and instructions that reference them and update or add to those docs in the same task.
+- **When deleting a file, MUST search the entire project for references to it and update or remove all of them in the same task.** Stale references to deleted files are a bug.
 - **NEVER use `sed` or shell commands for file editing.** Prefer `write` over `edit` — read the file, modify the full content, write it back. Only use `edit` for single-line or trivial targeted changes where the full file is too large.
 - When an edit removes content that was not intended, fix it immediately. Read the file after every edit to verify correctness.
 - After finishing a task, MUST give 5 strong numbered follow-up suggestions that further increase project value.
