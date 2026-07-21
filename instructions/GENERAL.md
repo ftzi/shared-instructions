@@ -29,10 +29,10 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 ## Git
 
 - **Commit / push gate — CRITICAL, NEVER VIOLATE:** The commands `git add`, `git commit`, and `git push` are **BLOCKED** from appearing in ANY bash invocation — standalone, chained with `&&`/`;`, or embedded in scripts — unless the user's message contains the word "commit." This is a hard block, not a guideline. There are zero exceptions. Finishing a task, passing `bun ok`, or pushing to a submodule does NOT grant permission. A prior commit in the conversation does NOT carry forward. If you include `git add`, `git commit`, or `git push` in any command without the user first saying "commit," you have violated this rule. Read your bash commands before executing: if any of those three words appear, STOP — the user has not authorized it.
-- When user does request a commit, use `git add -A && git commit -m "<message>" && git push origin <branch>` in a single shell invocation.
+- When user does request a commit, use `git add -A && git commit -m "<message>" && git push origin <branch>` in a single shell invocation. "Commit" means commit and push — NEVER auto-create a PR unless the user explicitly asks for one.
 - **NEVER add AI attribution to commit messages** (no `Co-Authored-By`).
 - **NEVER use `--no-verify`** unless user strictly says `"skip hooks"` or `"no-verify"`. If a hook fails, fix the issue — don't bypass it.
-- When on a non-main branch, after the final commit for a task, auto-create a PR via `gh pr create`.
+- **NEVER auto-create PRs.** Only run `gh pr create` when the user explicitly asks for a PR.
 - Review before committing: `git diff HEAD --stat` for summary, `git diff HEAD -- '*.ts' '*.tsx' '*.json' ':!bun.lock'` for code.
 - New branches: `git fetch origin && git checkout -b <name> origin/main`.
 - First push: `git push -u origin <branch-name>`.
