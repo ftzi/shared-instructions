@@ -29,7 +29,7 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 ## Git
 
 - **Commit / push gate — CRITICAL, NEVER VIOLATE:** The commands `git add`, `git commit`, and `git push` are **BLOCKED** from appearing in ANY bash invocation — standalone, chained with `&&`/`;`, or embedded in scripts — unless the user's message contains the word "commit." This is a hard block, not a guideline. There are zero exceptions. Finishing a task, passing `bun ok`, or pushing to a submodule does NOT grant permission. A prior commit in the conversation does NOT carry forward. If you include `git add`, `git commit`, or `git push` in any command without the user first saying "commit," you have violated this rule. Read your bash commands before executing: if any of those three words appear, STOP — the user has not authorized it.
-- When user does request a commit, use `git add -A && git commit -m "<message>" && git push origin <branch>` in a single shell invocation. "Commit" means commit and push — NEVER auto-create a PR unless the user explicitly asks for one.
+- When user does request a commit, use `git add -A && git commit -m "<message>" && git push origin <branch>` in a single shell invocation. **ALWAYS commit ALL changes with `git add -A`.** NEVER selectively unstage or exclude files because they seem "unrelated" to the current task. If the user says "commit", every dirty file goes in. "Commit" means commit and push — **MUST ALWAYS push immediately after committing.** NEVER leave a commit unpushed. NEVER auto-create a PR unless the user explicitly asks for one.
 - **NEVER add AI attribution to commit messages** (no `Co-Authored-By`).
 - **NEVER use `--no-verify`** unless user strictly says `"skip hooks"` or `"no-verify"`. If a hook fails, fix the issue — don't bypass it.
 - **NEVER auto-create PRs.** Only run `gh pr create` when the user explicitly asks for a PR.
@@ -82,6 +82,15 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 - When a change can fit an existing component, hook, or helper, MUST reuse the nearest existing pattern instead of inventing a new abstraction. Prefer the smallest code change that fully satisfies the request.
 - NEVER ask me to do something you should be the one doing, unless if it's for me to decide.
 - **Read the docs before guessing** — When working with a library, API, or service where the behavior is non-obvious or the official documentation could fast-forward development and provide best practices, MUST read the official docs first. Guessing wastes time and produces wrong code.
+
+## Copy & User-Facing Text
+
+- **Copy is critical craft.** User-facing text (UI strings, i18n values, marketing copy, legal pages, emails, error messages, meta tags) is of extreme importance. It IS the product voice. Treat every string as production code: precise, intentional, and the best possible version of itself.
+- **NEVER ship sloppy, placeholder, or rushed copy.** Every sentence must read naturally, be grammatically correct, and convey its meaning with clarity and intent. Re-read each string in full context before finalizing.
+- **Preserve meaning when editing.** When changing copy, keep the original intent and tone. Never mechanically substitute punctuation or words without reading the full surrounding sentence and confirming it still reads well.
+- **i18n source of truth.** When a locale has a source file (e.g. `en.json`), it is the canonical voice. Translations must match its intent, tone, and structure in their own language, not just word-substitute.
+- **Punctuation**
+  - **NEVER use em dashes (`—`).** Use a comma, colon, semicolon, parentheses, or period instead, chosen by grammar and context. This applies to all code, comments, strings, docs, i18n texts, and AI-generated prose.
 
 ## Code Standards
 
