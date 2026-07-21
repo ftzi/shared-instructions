@@ -33,6 +33,7 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 - **NEVER add AI attribution to commit messages** (no `Co-Authored-By`).
 - **NEVER use `--no-verify`** unless user strictly says `"skip hooks"` or `"no-verify"`. If a hook fails, fix the issue — don't bypass it.
 - **NEVER auto-create PRs.** Only run `gh pr create` when the user explicitly asks for a PR.
+- **NEVER create branches unless the user explicitly asks.** Work directly on the current branch — do not `git checkout -b` without permission.
 - Review before committing: `git diff HEAD --stat` for summary, `git diff HEAD -- '*.ts' '*.tsx' '*.json' ':!bun.lock'` for code.
 - New branches: `git fetch origin && git checkout -b <name> origin/main`.
 - First push: `git push -u origin <branch-name>`.
