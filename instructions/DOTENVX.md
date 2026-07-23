@@ -1,6 +1,6 @@
 # dotenvx
 
-Encrypted `.env` files committed to git. Private keys stored outside the repo.
+Encrypted `.env` files committed to git. Private keys stored outside the repo. Safe to share, review, and branch with.
 
 ## Setup
 
@@ -16,22 +16,32 @@ npm install --save-dev @dotenvx/dotenvx
 | `.env.production`  | Production secrets      | Yes (encrypted) |
 | `.env.keys`        | Private decryption keys | **Never**       |
 
-## Encrypt
+Each env file is encrypted with its own key pair:
 
-```bash
+- `DOTENV_PUBLIC_KEY_DEVELOPMENT` / `DOTENV_PRIVATE_KEY_DEVELOPMENT`
+- `DOTENV_PUBLIC_KEY_PRODUCTION` / `DOTENV_PRIVATE_KEY_PRODUCTION`
+
+The public key is embedded in the encrypted file metadata (safe to commit). Private keys live in `.env.keys` (git-ignored, NEVER committed) and are stored as GitHub Secrets.
+
+Encrypted values start with `encrypted:` and are safe to commit.
+
+## Commands
+
+```sh
+# Set a value (encrypts automatically)
+npx dotenvx set KEY value -f .env.development
+npx dotenvx set KEY value -f .env.production
+
+# Encrypt after manual plaintext edits
 npx dotenvx encrypt -f .env.development
 npx dotenvx encrypt -f .env.production
-```
 
-The encrypted files contain the public key in metadata (safe to commit). Private keys land in `.env.keys`.
+# Decrypt and read a single value
+npx dotenvx get KEY -f .env.production
 
-## Private keys
-
-Copy the private keys from `.env.keys`, then delete it:
-
-```
-DOTENV_PRIVATE_KEY_DEVELOPMENT=...   -> store locally (Keychain, password manager, etc.)
-DOTENV_PRIVATE_KEY_PRODUCTION=...    -> set as GitHub Secret for CI
+# Run a command with decrypted env loaded
+# --strict fails if any value is plaintext/missing — guards against unencrypted secrets
+npx dotenvx run -f .env.production --strict -- <command>
 ```
 
 ## Local dev
@@ -40,33 +50,28 @@ DOTENV_PRIVATE_KEY_PRODUCTION=...    -> set as GitHub Secret for CI
 
 ```bash
 # DOTENV_PRIVATE_KEY_DEVELOPMENT in env -> auto-loads .env.development
-dotenvx run -- your-command
+npx dotenvx run -- your-command
 ```
 
-Add to `package.json`:
+Or specify the file explicitly:
 
-```json
-"dev": "dotenvx run -- your-command"
+```bash
+npx dotenvx run -f .env.development --strict -- your-command
 ```
 
 ## CI
 
+- **PR / E2E workflows** load `.env.development` with `DOTENV_PRIVATE_KEY_DEVELOPMENT`.
+- **Main-merge deploy workflows** load `.env.production` with `DOTENV_PRIVATE_KEY_PRODUCTION`.
+- Use `dotenvx run --strict` to surface any unencrypted value as a hard failure.
+- NEVER reference individual GitHub secrets (e.g. `secrets.API_KEY`) for app config in deploy/migrate steps. Load env from the encrypted file instead.
+- Pure validation steps (lint, typecheck, test) generally need no secrets — don't load env for them.
+
 ```yaml
-- run: dotenvx run -f .env.development --strict -- your-command
+- run: npx dotenvx run -f .env.development --strict -- your-command
   env:
     DOTENV_PRIVATE_KEY_DEVELOPMENT: ${{ secrets.DOTENV_PRIVATE_KEY_DEVELOPMENT }}
 ```
-
-`--strict` fails fast if decryption fails rather than silently passing empty values.
-
-## Set individual values
-
-```bash
-npx dotenvx set KEY value -f .env.development
-npx dotenvx set KEY value -f .env.production
-```
-
-This updates the encrypted file directly without needing the private key (the public key in the file metadata is sufficient).
 
 ## Adding a new env var
 

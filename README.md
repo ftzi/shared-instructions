@@ -5,9 +5,8 @@ Reusable AI instructions, skills, and scripts across projects. Keep this repo ge
 ## Structure
 
 ```
-instructions/     Generic AI rules (GENERAL.md, TYPESCRIPT.md, REACT.md)
+instructions/     Generic AI rules (GENERAL.md, TYPESCRIPT.md, REACT.md, I18N.md, DOTENVX.md)
 scripts/          Reusable CLI tools
-DOTENVX.md        Secrets management standard (dotenvx)
 ```
 
 ## Usage
@@ -27,6 +26,7 @@ Then reference from your project's entry point:
     "shared/instructions/GENERAL.md",
     "shared/instructions/TYPESCRIPT.md",
     "shared/instructions/REACT.md",
+    "shared/instructions/I18N.md",
   ],
 }
 ```

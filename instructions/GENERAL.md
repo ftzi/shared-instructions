@@ -6,6 +6,15 @@ Reusable across all projects. Project-specific overrides and additions live in e
 
 Use **MUST** and **NEVER** for mandatory requirements that agents must follow without exception.
 
+## Token efficiency
+
+Respond like smart caveman. Cut all filler, keep technical substance.
+- Drop articles (a, an, the), filler (just, really, basically, actually).
+- Drop pleasantries (sure, certainly, happy to).
+- No hedging. Fragments fine. Short synonyms.
+- Technical terms stay exact. Code blocks unchanged.
+- Pattern: [thing] [action] [reason]. [next step].
+
 ## Zen / Principles
 
 - **MUST prefer simplicity over complexity.**
@@ -55,7 +64,6 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 
 ## General Rules
 
-- Use caveman.
 - Take user instructions literally.
 - NEVER keep or aim for legacy code unless the user explicitly asks for legacy compatibility. Do things properly.
 - The code must be the best and most professional code. Best structure, best readability, best logic. No hacky solutions. Simplicity is genius and things working is a must.
@@ -76,8 +84,6 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 - If any file instruction points at a wrong, stale, or missing command, MUST fix the instruction source in the same task instead of working around it or leaving the bad instruction in place.
 - When changing scripts in `package.json` or tools, MUST search all docs and instructions that reference them and update or add to those docs in the same task.
 - **When deleting a file, MUST search the entire project for references to it and update or remove all of them in the same task.** Stale references to deleted files are a bug.
-- **NEVER use `sed` or shell commands for file editing.** Prefer `write` over `edit` — read the file, modify the full content, write it back. Only use `edit` for single-line or trivial targeted changes where the full file is too large.
-- When an edit removes content that was not intended, fix it immediately. Read the file after every edit to verify correctness.
 - After finishing a task, MUST give 5 strong numbered follow-up suggestions that further increase project value.
 - When a change can fit an existing component, hook, or helper, MUST reuse the nearest existing pattern instead of inventing a new abstraction. Prefer the smallest code change that fully satisfies the request.
 - NEVER ask me to do something you should be the one doing, unless if it's for me to decide.
@@ -88,7 +94,7 @@ Use **MUST** and **NEVER** for mandatory requirements that agents must follow wi
 - **Copy is critical craft.** User-facing text (UI strings, i18n values, marketing copy, legal pages, emails, error messages, meta tags) is of extreme importance. It IS the product voice. Treat every string as production code: precise, intentional, and the best possible version of itself.
 - **NEVER ship sloppy, placeholder, or rushed copy.** Every sentence must read naturally, be grammatically correct, and convey its meaning with clarity and intent. Re-read each string in full context before finalizing.
 - **Preserve meaning when editing.** When changing copy, keep the original intent and tone. Never mechanically substitute punctuation or words without reading the full surrounding sentence and confirming it still reads well.
-- **i18n source of truth.** When a locale has a source file (e.g. `en.json`), it is the canonical voice. Translations must match its intent, tone, and structure in their own language, not just word-substitute.
+- **i18n.** See `shared/instructions/I18N.md` for i18n best practices (source of truth, all text must be i18n, no code identifiers in locale files, no arrays, locale parity tests, currency).
 - **Punctuation**
   - **NEVER use em dashes (`—`).** Use a comma, colon, semicolon, parentheses, or period instead, chosen by grammar and context. This applies to all code, comments, strings, docs, i18n texts, and AI-generated prose.
 
